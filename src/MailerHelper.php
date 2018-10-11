@@ -74,7 +74,7 @@ class MailerHelper
      *
      * @return array|false|mixed|null|string
      */
-    public function getSetting(string $name)
+    public static function getSetting(string $name)
     {
         return getenv($name) ?? constant("static::$name") ?? null;
     }
@@ -102,20 +102,20 @@ class MailerHelper
         $mailerDir = \dirname($reflector->getFileName());
 
         $mail->setLanguage(
-            self::MAIL_LANG,
-            "$mailerDir/language/phpmailer.lang-" . self::MAIL_LANG . '.php'
+            static::getSetting('MAIL_LANG'),
+            "$mailerDir/language/phpmailer.lang-" . static::getSetting('MAIL_LANG') . '.php'
         );
-        $mail->CharSet = self::MAIL_CHARSET;
+        $mail->CharSet = static::getSetting('MAIL_CHARSET');
         $mail->isSMTP();
-        $mail->Host = self::MAIL_HOST;
+        $mail->Host = static::getSetting('MAIL_HOST');
         $mail->SMTPAuth = true;
-        $mail->Username = self::MAIL_USERNAME;
-        $mail->Password = self::MAIL_PASSWORD;
-        $mail->SMTPSecure = self::MAIL_SMTPSECURE;
-        $mail->Port = self::MAIL_PORT;
+        $mail->Username = static::getSetting('MAIL_USERNAME');
+        $mail->Password = static::getSetting('MAIL_PASSWORD');
+        $mail->SMTPSecure = static::getSetting('MAIL_SMTPSECURE');
+        $mail->Port = static::getSetting('MAIL_PORT');
 
-        $mail->From = self::MAIL_FROM;
-        $mail->FromName = self::MAIL_FROM_NAME;
+        $mail->From = static::getSetting('MAIL_FROM');
+        $mail->FromName = static::getSetting('MAIL_FROM_NAME');
 
         foreach ($addresses as &$value) {
             $mail->addAddress($value);
@@ -123,7 +123,7 @@ class MailerHelper
 
         unset($value);
 
-        $mail->addReplyTo(self::MAIL_REPLYTO_ADDRESS, self::MAIL_REPLYTO_NAME);
+        $mail->addReplyTo(static::getSetting('MAIL_REPLYTO_ADDRESS'), static::getSetting('MAIL_REPLYTO_NAME'));
 
         $mail->WordWrap = 50;
 
