@@ -1,0 +1,12 @@
+{
+    "name": "scaleplan/helpers",
+    "description": "Various PHP helpers",
+    "autoload": {
+        "psr-4": {
+            "Scaleplan\\Helpers\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.0"
+    }
+}
