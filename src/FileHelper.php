@@ -122,24 +122,27 @@ class FileHelper
                     return null;
 
                 case UPLOAD_ERR_INI_SIZE:
-                    throw new FileSaveException('Размер принятого файла превысил максимально допустимый размер,
-                    который задан директивой upload_max_filesize конфигурационного файла php.ini');
+                    throw new FileSaveException(
+                        'Размер принятого файла превысил максимально допустимый '
+                        . 'размер, который задан директивой upload_max_filesize конфигурационного файла php.ini',
+                        413
+                    );
 
                 case UPLOAD_ERR_FORM_SIZE:
-                    throw new FileSaveException('Размер загружаемого файла превысил значение MAX_FILE_SIZE, 
-                    указанное в HTML-форме');
+                    throw new FileSaveException('Размер загружаемого файла превысил значение MAX_FILE_SIZE, '
+                    . 'указанное в HTML-форме', 413);
 
                 case UPLOAD_ERR_PARTIAL:
-                    throw new FileSaveException('Загружаемый файл был получен только частично');
+                    throw new FileSaveException('Загружаемый файл был получен только частично', 400);
 
                 case UPLOAD_ERR_NO_TMP_DIR:
-                    throw new FileSaveException('Отсутствует временная папка');
+                    throw new FileSaveException('Отсутствует временная папка', 500);
 
                 case UPLOAD_ERR_CANT_WRITE:
-                    throw new FileSaveException('Не удалось записать файл на диск');
+                    throw new FileSaveException('Не удалось записать файл на диск', 500);
 
                 case UPLOAD_ERR_EXTENSION:
-                    throw new FileSaveException('PHP-расширение остановило загрузку файла');
+                    throw new FileSaveException('PHP-расширение остановило загрузку файла', 500);
             }
 
             $nameArray = explode('.', $fn);
@@ -156,13 +159,20 @@ class FileHelper
 
             $fileMaxSizeMb = getenv('FILE_UPLOAD_MAX_SIZE') ?? self::FILE_UPLOAD_MAX_SIZE;
 
-            if (!is_uploaded_file($tn)
-                || filesize($tn) > (1048576 * (int) $fileMaxSizeMb)
-                || !($validExt = self::validateFileMimeType($tn))
-            ) {
+            if (!is_uploaded_file($tn)) {
                 unlink($tn);
-                throw new FileSaveException("Файл не может быть сохранен на сервере. 
-                Проверьте тип и размер файла (размер не должен превышать $fileMaxSizeMb мегабайт).");
+                throw new FileSaveException('Не удалось записать файл на диск', 500);
+            }
+
+            if (filesize($tn) > (1048576 * (int) $fileMaxSizeMb)) {
+                unlink($tn);
+                throw new FileSaveException("Размер загружаемого файла не может быть больше значения "
+                    . "$fileMaxSizeMb мегабайт).", 413);
+            }
+
+            if (!($validExt = self::validateFileMimeType($tn))) {
+                unlink($tn);
+                throw new FileSaveException('Неподдерживаемый тип файла', 415);
             }
 
             if ($validExt !== $ext) {
@@ -172,7 +182,7 @@ class FileHelper
             $newName = "$newName.$ext";
             $path = $uploadPath . $newName;
             if (!move_uploaded_file($tn, $path)) {
-                throw new FileSaveException("Файл $fn не был корректно сохранен");
+                throw new FileSaveException("Файл $fn не был корректно сохранен", 500);
             }
 
             $path = strtr($path, [$_SERVER['DOCUMENT_ROOT'] => '', static::getFilesDirectoryPath() => '']);
@@ -250,11 +260,7 @@ class FileHelper
             throw new FileValidationException("Файл $filePath не существует");
         }
 
-        if (empty($fInfo = finfo_open(FILEINFO_MIME_TYPE)) || empty($mimeType = finfo_file($fInfo, $filePath))) {
-            throw new FileValidationException("Не удалось получить информацию о типе файла $filePath");
-        }
-
-        if (empty($validExt = Helper::getConf('mimes')[$mimeType])) {
+        if (empty($validExt = Helper::getConf('mimes')[mime_content_type($filePath)])) {
             return null;
         }
 

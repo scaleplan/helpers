@@ -158,12 +158,16 @@ class Helper
     /**
      * Возвращает домен 3-го уровня
      *
-     * @param string $url - URL для выделения поддомена
+     * @param string|null $url - URL для выделения поддомена
      *
      * @return null|string
      */
-    public static function getSubdomain(string $url): ?string
+    public static function getSubdomain(string $url = null): ?string
     {
+        if (!$url) {
+            $url = $_SERVER['REQUEST_URI'];
+        }
+
         $url = parse_url($url, PHP_URL_HOST) ?? $url;
         $url = str_replace('www.', '', $url);
         $domains = explode('.', $url);
