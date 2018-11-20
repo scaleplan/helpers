@@ -36,8 +36,8 @@ class TranslateHelper
     public static function getMessageLang(string $message): string
     {
         $currentLang = file_get_contents(
-            self::LANG_DETECT_URL . '
-            ?key=' . self::YANDEX_TRANSLATE_API_KEY . '
+            static::LANG_DETECT_URL . '
+            ?key=' . static::YANDEX_TRANSLATE_API_KEY . '
             &text=' . $message . '
             &hint=en,ru'
         );
@@ -67,13 +67,13 @@ class TranslateHelper
         }
 
         $params = [
-            'key' => self::YANDEX_TRANSLATE_API_KEY,
+            'key' => static::YANDEX_TRANSLATE_API_KEY,
             'text' => $message,
             'lang' => $requestLang,
             'format' => 'html'
         ];
 
-        $translatedMessage = file_get_contents(self::TRANSLATE_URL . '?' . http_build_query($params));
+        $translatedMessage = file_get_contents(static::TRANSLATE_URL . '?' . http_build_query($params));
 
         return json_decode($translatedMessage, true)['text'][0] ?? $message;
     }

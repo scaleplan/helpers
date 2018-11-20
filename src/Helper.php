@@ -132,18 +132,6 @@ class Helper
     }
 
     /**
-     * Превратить строку в виде camelCase в строку вида dashed (camelCase -> camel-case)
-     *
-     * @param string $str - строка в camelCase
-     *
-     * @return string
-     */
-    public static function camel2dashed(string $str): string
-    {
-        return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $str));
-    }
-
-    /**
      * Почистить строку с номером телефона
      *
      * @param string $phoneNumber - строка с номером телефона
@@ -189,7 +177,7 @@ class Helper
     {
         foreach ($array as $key => &$value) {
             if (\is_array($value)) {
-                self::arrayReplaceRecursive($value, $replaceArray);
+                static::arrayReplaceRecursive($value, $replaceArray);
             }
 
             if (array_key_exists($key, $replaceArray)) {
@@ -224,7 +212,7 @@ class Helper
      */
     public static function getYoutubeInfo(string $videoId): array
     {
-        $info = file_get_contents(self::YOUTUBE_INFO_URL . $videoId);
+        $info = file_get_contents(static::YOUTUBE_INFO_URL . $videoId);
         if (!$info || stripos($info, 'status=fail') !== false) {
             throw new YoutubeException('Не удалось получить информацию о видеоролике');
         }
@@ -274,4 +262,14 @@ class Helper
         return getenv(static::DOMAIN_ENV_LABEL)
             && strpos($host, getenv(static::DOMAIN_ENV_LABEL)) !== false;
     }
+}
+
+/**
+ * @param string $envName
+ *
+ * @return mixed|null
+ */
+function getenv(string $envName) {
+    $env = getenv($envName);
+    return $env === false ? null : $env;
 }

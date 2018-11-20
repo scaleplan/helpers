@@ -40,7 +40,7 @@ class FileHelper
     {
         $fileName = $filePath . '/' . $fileName;
 
-        self::returnFile($fileName);
+        static::returnFile($fileName);
 
         $fp = fopen($fileName, 'wb');
         //fputs($fp, '\xEF\xBB\xBF');
@@ -50,7 +50,7 @@ class FileHelper
 
         fclose($fp);
 
-        self::returnFile($fileName);
+        static::returnFile($fileName);
 
         throw new FileReturnedException();
     }
@@ -157,7 +157,7 @@ class FileHelper
                 )
             );
 
-            $fileMaxSizeMb = getenv('FILE_UPLOAD_MAX_SIZE') ?? self::FILE_UPLOAD_MAX_SIZE;
+            $fileMaxSizeMb = getenv('FILE_UPLOAD_MAX_SIZE') ?? static::FILE_UPLOAD_MAX_SIZE;
 
             if (!is_uploaded_file($tn)) {
                 unlink($tn);
@@ -170,7 +170,7 @@ class FileHelper
                     . "$fileMaxSizeMb мегабайт).", 413);
             }
 
-            if (!($validExt = self::validateFileMimeType($tn))) {
+            if (!($validExt = static::validateFileMimeType($tn))) {
                 unlink($tn);
                 throw new FileSaveException('Неподдерживаемый тип файла', 415);
             }
@@ -191,7 +191,7 @@ class FileHelper
 
         $result = [];
         foreach ($files as $field => &$file) {
-            $filePath = self::getFilePath($field);
+            $filePath = static::getFilePath($field);
             $uploadPath = $_SERVER['DOCUMENT_ROOT'] . $filePath . '/';
             if (\is_array($file['name'])) {
                 foreach ($file['name'] as $index => &$fn) {

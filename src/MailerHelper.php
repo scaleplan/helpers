@@ -8,6 +8,7 @@ use PHPMailer\PHPMailer\PHPMailer;
  * Хэлпер отправки писем
  *
  * Class MailerHelper
+ *
  * @package App\Classes
  */
 class MailerHelper
@@ -32,12 +33,12 @@ class MailerHelper
     /**
      * Логин для авторизации на SMTP-сервере
      */
-    public const MAIL_USERNAME = 'admin@qooiz.me';
+    public const MAIL_USERNAME = 'user@domain.com';
 
     /**
      * Пароль для авторизации на SMTP-сервере
      */
-    public const MAIL_PASSWORD = '81lj54ewv9';
+    public const MAIL_PASSWORD = 'password';
 
     /**
      * Порт для подключения к SMTP-серверу
@@ -47,22 +48,22 @@ class MailerHelper
     /**
      * Обратный адрес писем
      */
-    public const MAIL_FROM = 'admin@qooiz.me';
+    public const MAIL_FROM = 'user@domain.com';
 
     /**
      * Имя отправителя
      */
-    public const MAIL_FROM_NAME = 'qooiz.me';
+    public const MAIL_FROM_NAME = 'domain.com';
 
     /**
      * Куда присылать ответные письма
      */
-    public const MAIL_REPLYTO_ADDRESS = 'admin@qooiz.me';
+    public const MAIL_REPLYTO_ADDRESS = 'user@domain.com';
 
     /**
      * Кому отсылать ответные письма
      */
-    public const MAIL_REPLYTO_NAME = 'qooiz.me';
+    public const MAIL_REPLYTO_NAME = 'domain.com';
 
     /**
      * Протокол безопасности
@@ -76,7 +77,7 @@ class MailerHelper
      */
     public static function getSetting(string $name)
     {
-        return getenv($name) ?? constant("static::$name") ?? null;
+        return getenv($name) ?? \constant("static::$name") ?? null;
     }
 
     /**
