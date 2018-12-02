@@ -2,7 +2,7 @@
 
 namespace Scaleplan\Helpers;
 
-use Scaleplan\CachePDO\CachePDO;
+use Scaleplan\CachePDO\Db;
 use Scaleplan\Helpers\Exceptions\HelperException;
 use Scaleplan\Helpers\Exceptions\YoutubeException;
 
@@ -106,12 +106,12 @@ class Helper
     /**
      * Отправить коммит во все подключения к РСУБД
      *
-     * @param CachePDO[] $databases
+     * @param Db[] $databases
      */
     public static function allDBCommit(array $databases): void
     {
         foreach ($databases as $db) {
-            if ($db instanceof CachePDO) {
+            if ($db instanceof Db) {
                 $db->commit();
             }
         }
@@ -120,12 +120,12 @@ class Helper
     /**
      * Отправить роллбэк во все подключения к РСУБД
      *
-     * @param CachePDO[] $databases
+     * @param Db[] $databases
      */
     public static function allDBRollback(array $databases): void
     {
         foreach ($databases as $db) {
-            if ($db instanceof CachePDO) {
+            if ($db instanceof Db) {
                 $db->rollBack();
             }
         }
