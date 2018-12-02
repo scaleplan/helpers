@@ -2,7 +2,7 @@
 
 namespace Scaleplan\Helpers;
 
-use Scaleplan\CachePDO\Db;
+use Scaleplan\Db\Db;
 use Scaleplan\Helpers\Exceptions\HelperException;
 use Scaleplan\Helpers\Exceptions\YoutubeException;
 
