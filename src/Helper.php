@@ -3,6 +3,7 @@
 namespace Scaleplan\Helpers;
 
 use Scaleplan\Db\Db;
+use Scaleplan\Helpers\Exceptions\EnvNotFoundException;
 use Scaleplan\Helpers\Exceptions\HelperException;
 use Scaleplan\Helpers\Exceptions\YoutubeException;
 
@@ -16,6 +17,12 @@ use Scaleplan\Helpers\Exceptions\YoutubeException;
 class Helper
 {
     public const YOUTUBE_INFO_URL = 'https://www.youtube.com/get_video_info?video_id=';
+    public const YOUTUBE_STATUS_FAIL = 'status=fail';
+    public const YOUTUBE_URL_ENCODED = 'url_encoded_fmt_stream_map';
+    public const YOUTUBE_TITLE = 'title';
+    public const YOUTUBE_IMG_NAME = 'default.jpg';
+    public const YOUTUBE_MAX_IMG_NAME = 'title';
+    public const YOUTUBE_THUMBNAIL_URL = 'thumbnail_url';
 
     public const DEFAULT_CONFIGS_DIRECTORY_PATH = '/configs';
 
@@ -33,7 +40,7 @@ class Helper
      *
      * @throws \Exception
      */
-    public static function indexingArray(array $array, string $field): array
+    public static function indexingArray(array $array, string $field) : array
     {
         foreach ($array as $key => &$value) {
             if (!\is_int($key)) {
@@ -60,11 +67,11 @@ class Helper
      *
      * @return array
      */
-    public static function disableNulls(& $data): array
+    public static function disableNulls(& $data) : array
     {
         if (\is_array($data)) {
             $offNull = function (& $value) {
-                return $value === null ? '' : $value;
+                return $value === null ?? $value;
             };
             if (isset($data[0]) && \is_array($data[0])) {
                 foreach ($data as $key => & $value) {
@@ -87,9 +94,9 @@ class Helper
      *
      * @throws HelperException
      */
-    public static function getConf(string $name): array
+    public static function getConf(string $name) : array
     {
-        $configPath = getenv('DEFAULT_CONFIGS_DIRECTORY_PATH') ?? static::DEFAULT_CONFIGS_DIRECTORY_PATH;
+        $configPath = get_env('DEFAULT_CONFIGS_DIRECTORY_PATH') ?? static::DEFAULT_CONFIGS_DIRECTORY_PATH;
 
         if (empty($_SESSION[$name])) {
             $filePath = "{$_SERVER['DOCUMENT_ROOT']}/$configPath/$name.php";
@@ -108,7 +115,7 @@ class Helper
      *
      * @param Db[] $databases
      */
-    public static function allDBCommit(array $databases): void
+    public static function allDBCommit(array $databases) : void
     {
         foreach ($databases as $db) {
             if ($db instanceof Db) {
@@ -122,7 +129,7 @@ class Helper
      *
      * @param Db[] $databases
      */
-    public static function allDBRollback(array $databases): void
+    public static function allDBRollback(array $databases) : void
     {
         foreach ($databases as $db) {
             if ($db instanceof Db) {
@@ -138,7 +145,7 @@ class Helper
      *
      * @return string
      */
-    public static function trimPhoneNumber(string &$phoneNumber): string
+    public static function trimPhoneNumber(string &$phoneNumber) : string
     {
         return $phoneNumber ? strtr($phoneNumber, [' ' => '', '(' => '', ')' => '', '-' => '']) : $phoneNumber;
     }
@@ -150,14 +157,15 @@ class Helper
      *
      * @return null|string
      */
-    public static function getSubdomain(string $url = null): ?string
+    public static function getSubdomain(string $url = null) : ?string
     {
         if (!$url) {
-            $url = $_SERVER['REQUEST_URI'];
+            $url = (string)$_SERVER['REQUEST_URI'];
         }
 
         $url = parse_url($url, PHP_URL_HOST) ?? $url;
-        $url = str_replace('www.', '', $url);
+        /** @var string $url */
+        $url = \str_replace('www.', '', $url);
         $domains = explode('.', $url);
         if (\count($domains) < 3) {
             return '';
@@ -173,7 +181,7 @@ class Helper
      *
      * @param array $replaceArray - массив замен в формате <старый ключ> => <новый ключ>
      */
-    public static function arrayReplaceRecursive(array &$array, array $replaceArray): void
+    public static function arrayReplaceRecursive(array &$array, array $replaceArray) : void
     {
         foreach ($array as $key => &$value) {
             if (\is_array($value)) {
@@ -194,10 +202,10 @@ class Helper
      *
      * @param int|null $limit
      */
-    public static function setLimit(?int &$limit): void
+    public static function setLimit(?int &$limit) : void
     {
         if (!$limit) {
-            $limit = getenv('DEFAULT_LIST_LIMIT') ?? static::DEFAULT_LIST_LIMIT;
+            $limit = (int)(get_env('DEFAULT_LIST_LIMIT') ?? static::DEFAULT_LIST_LIMIT);
         }
     }
 
@@ -210,10 +218,10 @@ class Helper
      *
      * @throws HelperException
      */
-    public static function getYoutubeInfo(string $videoId): array
+    public static function getYoutubeInfo(string $videoId) : array
     {
         $info = file_get_contents(static::YOUTUBE_INFO_URL . $videoId);
-        if (!$info || stripos($info, 'status=fail') !== false) {
+        if (!$info || stripos($info, static::YOUTUBE_STATUS_FAIL) !== false) {
             throw new YoutubeException('Не удалось получить информацию о видеоролике');
         }
 
@@ -225,7 +233,7 @@ class Helper
             $newInfo[$record[0]] = urldecode($record[1]);
         }
 
-        $sources = explode(',', $newInfo['url_encoded_fmt_stream_map']);
+        $sources = explode(',', $newInfo[static::YOUTUBE_URL_ENCODED]);
         foreach ($sources as &$source) {
             $streams = [];
             foreach (explode('&', $source) as $record) {
@@ -239,13 +247,13 @@ class Helper
         unset($source);
 
         return [
-            'title' => str_replace('+', '', $newInfo['title'] ?? ''),
-            'poster' => str_replace(
-                'default.jpg',
-                'maxresdefault.jpg',
-                $newInfo['thumbnail_url'] ?? ''
+            'title'   => str_replace('+', '', $newInfo[static::YOUTUBE_TITLE] ?? ''),
+            'poster'  => str_replace(
+                static::YOUTUBE_IMG_NAME,
+                static::YOUTUBE_MAX_IMG_NAME,
+                $newInfo[static::YOUTUBE_THUMBNAIL_URL] ?? ''
             ),
-            'sources' => $sources
+            'sources' => $sources,
         ];
     }
 
@@ -257,9 +265,9 @@ class Helper
      *
      * @return bool
      */
-    public static function hostCheck(string $host): bool
+    public static function hostCheck(string $host) : bool
     {
-        return getenv(static::DOMAIN_ENV_LABEL)
+        return getenv(static::DOMAIN_ENV_LABEL) !== false
             && strpos($host, getenv(static::DOMAIN_ENV_LABEL)) !== false;
     }
 }
@@ -267,9 +275,27 @@ class Helper
 /**
  * @param string $envName
  *
- * @return mixed|null
+ * @return string|null
  */
-function getenv(string $envName) {
+function get_env(string $envName) : ?string
+{
     $env = getenv($envName);
     return $env === false ? null : $env;
+}
+
+/**
+ * @param string $envName
+ *
+ * @return string
+ *
+ * @throws EnvNotFoundException
+ */
+function get_required_env(string $envName) : string
+{
+    $env = getenv($envName);
+    if ($env === false) {
+        throw new EnvNotFoundException();
+    }
+
+    return $env;
 }

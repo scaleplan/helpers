@@ -148,7 +148,7 @@ class FileHelper
             $nameArray = explode('.', $fn);
             $ext = strtolower(end($nameArray));
             $newName = preg_replace(
-                '/[\s,\/:;\?!*&^%#@$|<>~`]/i',
+                '/[\s,\/:;\?!*&^%#@$|<>~`]/',
                 '',
                 str_replace(
                     ' ',
@@ -157,7 +157,7 @@ class FileHelper
                 )
             );
 
-            $fileMaxSizeMb = getenv('FILE_UPLOAD_MAX_SIZE') ?? static::FILE_UPLOAD_MAX_SIZE;
+            $fileMaxSizeMb = get_env('FILE_UPLOAD_MAX_SIZE') ?? static::FILE_UPLOAD_MAX_SIZE;
 
             if (!is_uploaded_file($tn)) {
                 unlink($tn);
@@ -166,8 +166,9 @@ class FileHelper
 
             if (filesize($tn) > (1048576 * (int) $fileMaxSizeMb)) {
                 unlink($tn);
-                throw new FileSaveException("Размер загружаемого файла не может быть больше значения "
-                    . "$fileMaxSizeMb мегабайт).", 413);
+                throw new FileSaveException(
+                    "Размер загружаемого файла не может быть больше значения $fileMaxSizeMb мегабайт).", 413
+                );
             }
 
             if (!($validExt = static::validateFileMimeType($tn))) {
@@ -215,7 +216,7 @@ class FileHelper
      */
     public static function getFilesDirectoryPath() : string
     {
-        return (string) getenv('FILES_DIRECTORY_PATH') ?? static::FILES_DIRECTORY_PATH;
+        return get_env('FILES_DIRECTORY_PATH') ?? static::FILES_DIRECTORY_PATH;
     }
 
     /**
@@ -223,7 +224,7 @@ class FileHelper
      */
     public static function getLocationsFilePath() : string
     {
-        return (string) getenv('FILE_LOCATIONS_FILE_PATH') ?? static::FILE_LOCATIONS_FILE_PATH;
+        return get_env('FILE_LOCATIONS_FILE_PATH') ?? static::FILE_LOCATIONS_FILE_PATH;
     }
 
     /**

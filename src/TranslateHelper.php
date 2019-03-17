@@ -2,6 +2,8 @@
 
 namespace App\Classes;
 
+use function Scaleplan\Helpers\get_env;
+
 /**
  * Хэлпер для перевода текста посредством Yandex.Переводчика
  *
@@ -27,6 +29,14 @@ class TranslateHelper
     public const LANG_DETECT_URL = 'https://translate.yandex.net/api/v1.5/tr.json/detect';
 
     /**
+     * @return string
+     */
+    public static function getApiKey() : string
+    {
+        return get_env('YANDEX_TRANSLATE_API_KEY') ?? static::YANDEX_TRANSLATE_API_KEY;
+    }
+
+    /**
      * Вернуть язык сообщения
      *
      * @param string $message
@@ -37,7 +47,7 @@ class TranslateHelper
     {
         $currentLang = file_get_contents(
             static::LANG_DETECT_URL . '
-            ?key=' . static::YANDEX_TRANSLATE_API_KEY . '
+            ?key=' . static::getApiKey() . '
             &text=' . $message . '
             &hint=en,ru'
         );
@@ -67,7 +77,7 @@ class TranslateHelper
         }
 
         $params = [
-            'key' => static::YANDEX_TRANSLATE_API_KEY,
+            'key' => static::getApiKey(),
             'text' => $message,
             'lang' => $requestLang,
             'format' => 'html'

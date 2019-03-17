@@ -14,7 +14,7 @@ class NameConverter
      *
      * @return string
      */
-    public static function snakeCaseToLowerCamelCase(string $snake) : string
+    public static function snakeCaseToLowerCamelCase(\string $snake) : string
     {
         return lcfirst(static::snakeCaseToCamelCase($snake));
     }
@@ -24,7 +24,7 @@ class NameConverter
      *
      * @return string
      */
-    public static function snakeCaseToCamelCase(string $snake) : string
+    public static function snakeCaseToCamelCase(\string $snake) : string
     {
         return str_replace(' ', '', ucwords(str_replace('_', ' ', $snake)));
     }
@@ -34,7 +34,7 @@ class NameConverter
      *
      * @return string
      */
-    public static function camelCaseToSnakeCase(string $camel)
+    public static function camelCaseToSnakeCase(\string $camel) : string
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $camel));
     }

@@ -77,7 +77,7 @@ class MailerHelper
      */
     public static function getSetting(string $name)
     {
-        return getenv($name) ?? \constant("static::$name") ?? null;
+        return get_env($name) ?? \constant("static::$name") ?? null;
     }
 
     /**
@@ -132,7 +132,7 @@ class MailerHelper
             $mail->addAttachment($file);
         }
 
-        $mail->isHTML(true);
+        $mail->isHTML();
         $mail->Subject = $subject;
         $mail->Body = $message;
 
