@@ -3,7 +3,6 @@
 namespace Scaleplan\Helpers;
 
 use Scaleplan\Db\Db;
-use Scaleplan\Helpers\Exceptions\EnvNotFoundException;
 use Scaleplan\Helpers\Exceptions\HelperException;
 use Scaleplan\Helpers\Exceptions\YoutubeException;
 
@@ -270,32 +269,4 @@ class Helper
         return getenv(static::DOMAIN_ENV_LABEL) !== false
             && strpos($host, getenv(static::DOMAIN_ENV_LABEL)) !== false;
     }
-}
-
-/**
- * @param string $envName
- *
- * @return string|null
- */
-function get_env(string $envName) : ?string
-{
-    $env = getenv($envName);
-    return $env === false ? null : $env;
-}
-
-/**
- * @param string $envName
- *
- * @return string
- *
- * @throws EnvNotFoundException
- */
-function get_required_env(string $envName) : string
-{
-    $env = getenv($envName);
-    if ($env === false) {
-        throw new EnvNotFoundException();
-    }
-
-    return $env;
 }

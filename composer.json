@@ -2,6 +2,9 @@
     "name": "scaleplan/helpers",
     "description": "Various PHP helpers",
     "autoload": {
+        "files": [
+            "src/functions.php"
+        ],
         "psr-4": {
             "Scaleplan\\Helpers\\": "src/"
         }
