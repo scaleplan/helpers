@@ -281,10 +281,10 @@ class FileHelper
     public static function getFilePath(string $fileKind): string
     {
         $locations = Helper::getConf(static::getLocationsFilePath());
-        if (!\is_array($locations) || empty($locations['files'][$fileKind])) {
+        if (!\is_array($locations) || empty($locations[$fileKind])) {
             throw new FileUploadException("Для поля $fileKind не задан путь сохранения");
         }
 
-        return $locations['files'][$fileKind];
+        return $locations[$fileKind];
     }
 }
