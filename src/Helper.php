@@ -89,7 +89,7 @@ class Helper
      *
      * @return string
      */
-    public static function trimPhoneNumber(string &$phoneNumber) : string
+    public static function trimPhoneNumber(string $phoneNumber) : string
     {
         return $phoneNumber ? strtr($phoneNumber, [' ' => '', '(' => '', ')' => '', '-' => '']) : $phoneNumber;
     }

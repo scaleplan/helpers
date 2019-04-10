@@ -30,6 +30,26 @@ class NameConverter
     }
 
     /**
+     * @param string $snake
+     *
+     * @return string
+     */
+    public static function kebabCaseToLowerCamelCase(string $snake) : string
+    {
+        return lcfirst(static::snakeCaseToCamelCase($snake));
+    }
+
+    /**
+     * @param string $snake
+     *
+     * @return string
+     */
+    public static function kebabCaseToCamelCase(string $snake) : string
+    {
+        return str_replace(' ', '', ucwords(str_replace('-', ' ', $snake)));
+    }
+
+    /**
      * @param string $camel
      *
      * @return string
