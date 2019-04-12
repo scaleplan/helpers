@@ -57,7 +57,9 @@ class Helper
     /**
      * Отправить коммит во все подключения к РСУБД
      *
-     * @param Db[] $databases
+     * @param array $databases
+     *
+     * @throws \Scaleplan\Db\Exceptions\PDOConnectionException
      */
     public static function allDBCommit(array $databases) : void
     {
@@ -71,7 +73,9 @@ class Helper
     /**
      * Отправить роллбэк во все подключения к РСУБД
      *
-     * @param Db[] $databases
+     * @param array $databases
+     *
+     * @throws \Scaleplan\Db\Exceptions\PDOConnectionException
      */
     public static function allDBRollback(array $databases) : void
     {

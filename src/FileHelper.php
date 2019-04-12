@@ -102,7 +102,7 @@ class FileHelper
      */
     public static function saveFiles(array $files): array
     {
-        $saveFile = function (array &$file, string &$uploadPath, int &$index = -1): ?array
+        $saveFile = static function (array &$file, string &$uploadPath, int &$index = -1): ?array
         {
             if ($index >= 0) {
                 $fn = &$file['name'][$index];
@@ -157,7 +157,7 @@ class FileHelper
                 )
             );
 
-            $fileMaxSizeMb = get_env('FILE_UPLOAD_MAX_SIZE') ?? static::FILE_UPLOAD_MAX_SIZE;
+            $fileMaxSizeMb = (int)(get_env('FILE_UPLOAD_MAX_SIZE') ?? static::FILE_UPLOAD_MAX_SIZE);
 
             if (!is_uploaded_file($tn)) {
                 unlink($tn);
