@@ -287,4 +287,37 @@ class FileHelper
 
         return $locations[$fileKind];
     }
+
+    /**
+     * Найти все файлы в каталоге, включая вложенные директории
+     *
+     * @param string $dirPath - путь к каталогу
+     *
+     * @return array
+     */
+    public static function getRecursivePaths(string $dirPath) : array
+    {
+        if (!\is_dir($dirPath)) {
+            return [];
+        }
+
+        $dirPath = rtrim($dirPath, '/\ ');
+        $paths = \scandir($dirPath, SCANDIR_SORT_NONE);
+        unset($paths[0], $paths[1]);
+        $result = [];
+
+        foreach ($paths as $path) {
+            $path = "$dirPath/$path";
+            if (!\is_dir($path)) {
+                $result[] = $path;
+                continue;
+            }
+
+            $result += array_map(static function ($item) use ($path) {
+                return "$path/$item";
+            }, static::getRecursivePaths($path));
+        }
+
+        return $result;
+    }
 }

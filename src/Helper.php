@@ -73,7 +73,7 @@ class Helper
     /**
      * Отправить роллбэк во все подключения к РСУБД
      *
-     * @param array $databases
+     * @param Db[] $databases
      *
      * @throws \Scaleplan\Db\Exceptions\PDOConnectionException
      */
@@ -197,6 +197,6 @@ class Helper
         }
 
         return getenv(static::DOMAIN_ENV_LABEL) !== false
-            && strpos($host, getenv(static::DOMAIN_ENV_LABEL)) !== false;
+            && strrpos($host, getenv(static::DOMAIN_ENV_LABEL)) === 0;
     }
 }
