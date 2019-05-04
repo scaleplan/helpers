@@ -103,9 +103,9 @@ class Helper
      *
      * @param string|null $url - URL для выделения поддомена
      *
-     * @return null|string
+     * @return string
      */
-    public static function getSubdomain(string $url = null) : ?string
+    public static function getSubdomain(string $url = null) : string
     {
         if (!$url) {
             $url = (string)$_SERVER['HTTP_HOST'];
@@ -197,6 +197,6 @@ class Helper
         }
 
         return getenv(static::DOMAIN_ENV_LABEL) !== false
-            && strrpos($host, getenv(static::DOMAIN_ENV_LABEL)) === 0;
+            && strrpos(strrev($host), strrev('.' . getenv(static::DOMAIN_ENV_LABEL))) === 0;
     }
 }
