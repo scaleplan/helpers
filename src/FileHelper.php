@@ -25,8 +25,6 @@ class FileHelper
 
     public const FILES_DIRECTORY_PATH = '/files';
 
-    public const FILE_LOCATIONS_FILE_PATH = 'paths';
-
     /**
      * Сохранить массив в csv-файл
      *
@@ -213,18 +211,22 @@ class FileHelper
 
     /**
      * @return string
+     *
+     * @throws Exceptions\EnvNotFoundException
      */
     public static function getFilesDirectoryPath() : string
     {
-        return get_env('FILES_DIRECTORY_PATH') ?? static::FILES_DIRECTORY_PATH;
+        return get_required_env('BUNDLE_PATH') . (get_env('FILES_DIRECTORY_PATH') ?? static::FILES_DIRECTORY_PATH);
     }
 
     /**
      * @return string
+     *
+     * @throws Exceptions\EnvNotFoundException
      */
     public static function getLocationsFilePath() : string
     {
-        return get_env('FILE_LOCATIONS_FILE_PATH') ?? static::FILE_LOCATIONS_FILE_PATH;
+        return get_required_env('BUNDLE_PATH') . get_required_env('FILE_LOCATIONS_CONFIG_PATH');
     }
 
     /**

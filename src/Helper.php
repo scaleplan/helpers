@@ -20,7 +20,7 @@ class Helper
     public const YOUTUBE_URL_ENCODED = 'url_encoded_fmt_stream_map';
     public const YOUTUBE_TITLE = 'title';
     public const YOUTUBE_IMG_NAME = 'default.jpg';
-    public const YOUTUBE_MAX_IMG_NAME = 'title';
+    public const YOUTUBE_MAX_IMG_NAME = 'maxresdefault.jpg';
     public const YOUTUBE_THUMBNAIL_URL = 'thumbnail_url';
 
     public const DEFAULT_CONFIGS_DIRECTORY_PATH = '/configs';
@@ -197,6 +197,6 @@ class Helper
         }
 
         return getenv(static::DOMAIN_ENV_LABEL) !== false
-            && strrpos(strrev($host), strrev('.' . getenv(static::DOMAIN_ENV_LABEL))) === 0;
+            && strrpos(strrev($host), strrev(getenv(static::DOMAIN_ENV_LABEL))) === 0;
     }
 }
