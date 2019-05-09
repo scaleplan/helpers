@@ -43,7 +43,7 @@ class Helper
         $configPath = get_env('DEFAULT_CONFIGS_DIRECTORY_PATH') ?? static::DEFAULT_CONFIGS_DIRECTORY_PATH;
 
         if (empty($_SESSION[$name])) {
-            $filePath = "{$_SERVER['DOCUMENT_ROOT']}/$configPath/$name.php";
+            $filePath = get_required_env('BUNDLE_PATH') . "/$configPath/$name.php";
             if (!file_exists($filePath)) {
                 throw new HelperException("Файл $filePath не существует");
             }

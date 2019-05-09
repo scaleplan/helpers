@@ -25,6 +25,8 @@ class FileHelper
 
     public const FILES_DIRECTORY_PATH = '/files';
 
+    public const DIRECTORY_MODE = 0777;
+
     /**
      * Сохранить массив в csv-файл
      *
@@ -179,12 +181,18 @@ class FileHelper
         }
 
         $newName = "$newName.$ext";
-        $path = $uploadPath . $newName;
+        $path = "$uploadPath/$newName";
         if (!move_uploaded_file($tn, $path)) {
             throw new FileSaveException("Файл $fn не был корректно сохранен", 500);
         }
 
-        $path = strtr($path, [$_SERVER['DOCUMENT_ROOT'] => '', static::getFilesDirectoryPath() => '']);
+        $path = getenv('FILES_URL_PREFIX') . strtr(
+            $path,
+            [
+                get_required_env('BUNDLE_PATH') => '',
+                get_required_env('FILES_DIRECTORY_PATH') => '',
+            ]
+        );
         return ['name' => $fn, 'path' => $path];
     }
 
@@ -202,8 +210,11 @@ class FileHelper
     {
         $result = [];
         foreach ($files as $field => &$file) {
-            $filePath = static::getFilePath($field);
-            $uploadPath = $_SERVER['DOCUMENT_ROOT'] . $filePath . '/';
+            $uploadPath = static::getFilePath($field);
+            if (!\is_dir($uploadPath) && !mkdir($uploadPath, static::DIRECTORY_MODE, true) && !\is_dir($uploadPath)) {
+                throw new FileSaveException('Не удалось создать директорию сохранения', 500);
+            }
+
             if (\is_array($file['name'])) {
                 foreach ($file['name'] as $index => &$fn) {
                     if ($moveFile = static::saveFile($file, $uploadPath, $index)) {
@@ -213,32 +224,12 @@ class FileHelper
 
                 unset($fn);
             } elseif ($moveFile = static::saveFile($file, $uploadPath)) {
-                $result[$field][0] = $moveFile;
+                $result[$field] = $moveFile;
             }
         }
 
         unset($file);
         return $result;
-    }
-
-    /**
-     * @return string
-     *
-     * @throws Exceptions\EnvNotFoundException
-     */
-    public static function getFilesDirectoryPath() : string
-    {
-        return get_required_env('BUNDLE_PATH') . (get_env('FILES_DIRECTORY_PATH') ?? static::FILES_DIRECTORY_PATH);
-    }
-
-    /**
-     * @return string
-     *
-     * @throws Exceptions\EnvNotFoundException
-     */
-    public static function getLocationsFilePath() : string
-    {
-        return get_required_env('BUNDLE_PATH') . get_required_env('FILE_LOCATIONS_CONFIG_PATH');
     }
 
     /**
@@ -252,7 +243,7 @@ class FileHelper
      */
     public static function validateFileExt(string &$extName) : bool
     {
-        if (empty(Helper::getConf('exts')[strtolower($extName)])) {
+        if (empty(Helper::getConf(get_required_env('EXTS_CONFIG_NAME'))[strtolower($extName)])) {
             return false;
         }
 
@@ -275,7 +266,7 @@ class FileHelper
             throw new FileValidationException("Файл $filePath не существует");
         }
 
-        if (empty($validExt = Helper::getConf('mimes')[mime_content_type($filePath)])) {
+        if (empty($validExt = Helper::getConf(get_required_env('MIMES_CONFIG_NAME'))[mime_content_type($filePath)])) {
             return null;
         }
 
@@ -294,12 +285,14 @@ class FileHelper
      */
     public static function getFilePath(string $fileKind) : string
     {
-        $locations = Helper::getConf(static::getLocationsFilePath());
+        $locations = Helper::getConf(get_required_env('FILE_LOCATIONS_CONFIG_NAME'));
         if (!\is_array($locations) || empty($locations[$fileKind])) {
             throw new FileUploadException("Для поля $fileKind не задан путь сохранения");
         }
 
-        return $locations[$fileKind];
+        return get_required_env('BUNDLE_PATH')
+            . get_required_env('FILES_DIRECTORY_PATH')
+            . $locations[$fileKind];
     }
 
     /**
