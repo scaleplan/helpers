@@ -199,4 +199,15 @@ class Helper
         return getenv(static::DOMAIN_ENV_LABEL) !== false
             && strrpos(strrev($host), strrev(getenv(static::DOMAIN_ENV_LABEL))) === 0;
     }
+
+    /**
+     * @param string $host
+     * @param array $params
+     *
+     * @return string
+     */
+    public static function buildUrl(string $host, array $params) : string
+    {
+        return $host . '?' . http_build_query($params);
+    }
 }

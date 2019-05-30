@@ -58,4 +58,14 @@ class NameConverter
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $camel));
     }
+
+    /**
+     * @param string $camel
+     *
+     * @return string
+     */
+    public static function camelCaseToKebabCase(string $camel) : string
+    {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $camel));
+    }
 }
