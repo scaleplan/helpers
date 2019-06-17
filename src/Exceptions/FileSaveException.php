@@ -10,4 +10,5 @@ namespace Scaleplan\Helpers\Exceptions;
 class FileSaveException extends HelperException
 {
     public const MESSAGE = 'Save file error.';
+    public const CODE = 500;
 }

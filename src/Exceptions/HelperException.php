@@ -10,6 +10,7 @@ namespace Scaleplan\Helpers\Exceptions;
 class HelperException extends \Exception
 {
     public const MESSAGE = 'Helper error.';
+    public const CODE = 500;
 
     /**
      * HelperException constructor.
@@ -20,6 +21,6 @@ class HelperException extends \Exception
      */
     public function __construct(string $message = '', int $code = 0, \Throwable $previous = null)
     {
-        parent::__construct($message ?: static::MESSAGE, $code, $previous);
+        parent::__construct($message ?: static::MESSAGE, $code ?: static::CODE, $previous);
     }
 }

@@ -10,4 +10,5 @@ namespace Scaleplan\Helpers\Exceptions;
 class FileUploadException extends HelperException
 {
     public const MESSAGE = 'File upload error.';
+    public const CODE = 500;
 }

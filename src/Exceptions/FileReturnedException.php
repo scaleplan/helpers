@@ -10,4 +10,5 @@ namespace Scaleplan\Helpers\Exceptions;
 class FileReturnedException extends HelperException
 {
     public const MESSAGE = 'File returned error.';
+    public const CODE = 500;
 }

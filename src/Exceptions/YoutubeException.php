@@ -10,4 +10,5 @@ namespace Scaleplan\Helpers\Exceptions;
 class YoutubeException extends HelperException
 {
     public const MESSAGE = 'Youtube error.';
+    public const CODE = 523;
 }
