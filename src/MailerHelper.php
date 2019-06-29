@@ -18,7 +18,7 @@ class MailerHelper
     /**
      * Язык писем
      */
-    public const MAIL_LANG = 'ru';
+    public const DEFAULT_MAIL_LANG = 'ru';
 
     /**
      * Кодировка писем
@@ -71,29 +71,20 @@ class MailerHelper
     public const MAIL_SMTPSECURE = 'ssl';
 
     /**
-     * @param string $name
-     *
-     * @return array|false|mixed|null|string
-     */
-    public static function getSetting(string $name)
-    {
-        return get_env($name) ?? \constant("static::$name") ?? null;
-    }
-
-    /**
      * Отправка почты
      *
      * @param array $addresses - массив адресов под рассылку
      * @param string $subject - тема письма
      * @param string $message - тело письма
+     * @param string|null $mailLang - язык письма
      * @param array $files - прикрепляемые файлы
      *
      * @return bool
-     *
+     * @throws Exceptions\EnvNotFoundException
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws \ReflectionException
      */
-    public static function mailSend(array $addresses, string $subject, string $message, array $files = []): bool
+    public static function mailSend(array $addresses, string $subject, string $message, string $mailLang = null, array $files = []): bool
     {
         $mail = new PHPMailer();
 
@@ -101,22 +92,20 @@ class MailerHelper
 
         $reflector = new \ReflectionClass(PHPMailer::class);
         $mailerDir = \dirname($reflector->getFileName());
+        $mailLang = $mailLang ?? get_required_env('DEFAULT_MAIL_LANG');
 
-        $mail->setLanguage(
-            static::getSetting('MAIL_LANG'),
-            "$mailerDir/language/phpmailer.lang-" . static::getSetting('MAIL_LANG') . '.php'
-        );
-        $mail->CharSet = static::getSetting('MAIL_CHARSET');
+        $mail->setLanguage($mailLang, "$mailerDir/language/phpmailer.lang-$mailLang.php");
+        $mail->CharSet = get_required_env('MAIL_CHARSET');
         $mail->isSMTP();
-        $mail->Host = static::getSetting('MAIL_HOST');
+        $mail->Host = get_required_env('MAIL_HOST');
         $mail->SMTPAuth = true;
-        $mail->Username = static::getSetting('MAIL_USERNAME');
-        $mail->Password = static::getSetting('MAIL_PASSWORD');
-        $mail->SMTPSecure = static::getSetting('MAIL_SMTPSECURE');
-        $mail->Port = static::getSetting('MAIL_PORT');
+        $mail->Username = get_required_env('MAIL_USERNAME');
+        $mail->Password = get_required_env('MAIL_PASSWORD');
+        $mail->SMTPSecure = get_required_env('MAIL_SMTPSECURE');
+        $mail->Port = get_required_env('MAIL_PORT');
 
-        $mail->From = static::getSetting('MAIL_FROM');
-        $mail->FromName = static::getSetting('MAIL_FROM_NAME');
+        $mail->From = get_required_env('MAIL_FROM');
+        $mail->FromName = get_required_env('MAIL_FROM_NAME');
 
         foreach ($addresses as &$value) {
             $mail->addAddress($value);
@@ -124,7 +113,7 @@ class MailerHelper
 
         unset($value);
 
-        $mail->addReplyTo(static::getSetting('MAIL_REPLYTO_ADDRESS'), static::getSetting('MAIL_REPLYTO_NAME'));
+        $mail->addReplyTo(get_required_env('MAIL_REPLYTO_ADDRESS'), get_required_env('MAIL_REPLYTO_NAME'));
 
         $mail->WordWrap = 50;
 
