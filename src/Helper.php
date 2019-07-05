@@ -201,13 +201,17 @@ class Helper
     }
 
     /**
-     * @param string $host
+     * @param string $url
      * @param array $params
      *
      * @return string
      */
-    public static function buildUrl(string $host, array $params) : string
+    public static function buildUrl(string $url, array $params) : string
     {
-        return $host . '?' . http_build_query($params);
+        if ($params) {
+            $url = "$url?" . http_build_query($params);
+        }
+
+        return $url;
     }
 }
