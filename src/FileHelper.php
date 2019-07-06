@@ -176,9 +176,9 @@ class FileHelper
             throw new FileSaveException('Неподдерживаемый тип файла', 415);
         }
 
-        if ($validExt !== $ext) {
-            $ext = $validExt;
-        }
+//        if ($validExt !== $ext) {
+//            $ext = $validExt;
+//        }
 
         $newName = "$newName.$ext";
         $path = "$uploadPath/$newName";
