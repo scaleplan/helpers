@@ -98,9 +98,8 @@ class FileHelper
      * @return array|null
      *
      * @throws Exceptions\EnvNotFoundException
-     * @throws Exceptions\HelperException
      * @throws FileSaveException
-     * @throws FileValidationException
+     * @throws \Throwable
      */
     public static function saveFile(array &$file, string &$uploadPath, int &$index = -1) : ?array
     {
@@ -159,31 +158,37 @@ class FileHelper
 
         $fileMaxSizeMb = (int)(get_env('FILE_UPLOAD_MAX_SIZE') ?? static::FILE_UPLOAD_MAX_SIZE);
 
-        if (!is_uploaded_file($tn)) {
-            unlink($tn);
-            throw new FileSaveException('Не удалось записать файл на диск', 500);
-        }
+        try {
+            if (!is_uploaded_file($tn)) {
+                throw new FileSaveException('Не удалось записать файл на диск', 500);
+            }
 
-        if (filesize($tn) > (1048576 * $fileMaxSizeMb)) {
-            unlink($tn);
-            throw new FileSaveException(
-                "Размер загружаемого файла не может быть больше значения $fileMaxSizeMb мегабайт).", 413
-            );
-        }
+            if (filesize($tn) > (1048576 * $fileMaxSizeMb)) {
+                throw new FileSaveException(
+                    "Размер загружаемого файла не может быть больше значения $fileMaxSizeMb мегабайт).", 413
+                );
+            }
 
-        if (!($validExt = static::validateFileMimeType($tn))) {
-            unlink($tn);
-            throw new FileSaveException('Неподдерживаемый тип файла', 415);
-        }
+            if (!static::validateFileExt($ext)) {
+                throw new FileSaveException('Неподдерживаемое расширение', 415);
+            }
+
+            if (!($validExt = static::validateFileMimeType($tn))) {
+                throw new FileSaveException('Неподдерживаемый тип файла', 415);
+            }
 
 //        if ($validExt !== $ext) {
 //            $ext = $validExt;
 //        }
 
-        $newName = "$newName.$ext";
-        $path = "$uploadPath/$newName";
-        if (!move_uploaded_file($tn, $path)) {
-            throw new FileSaveException("Файл $fn не был корректно сохранен", 500);
+            $newName = "$newName.$ext";
+            $path = "$uploadPath/$newName";
+            if (!move_uploaded_file($tn, $path)) {
+                throw new FileSaveException("Файл $fn не был корректно сохранен", 500);
+            }
+        } catch (\Throwable $e) {
+            unlink($tn);
+            throw $e;
         }
 
         $path = getenv('FILES_URL_PREFIX') . strtr(
@@ -203,8 +208,11 @@ class FileHelper
      *
      * @return array
      *
+     * @throws Exceptions\EnvNotFoundException
      * @throws Exceptions\HelperException
+     * @throws FileSaveException
      * @throws FileUploadException
+     * @throws \Throwable
      */
     public static function saveFiles(array $files) : array
     {
