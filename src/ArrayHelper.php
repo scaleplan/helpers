@@ -98,4 +98,43 @@ class ArrayHelper
     {
         return array_keys($array) !== range(0, count($array) - 1);
     }
+
+    /**
+     * @param array $array
+     * @param string $key
+     *
+     * @return array
+     */
+    public static function arrayFillKey(array $array, string $key) : array
+    {
+        $result = [];
+        foreach ($array as $value) {
+            $result[] = [$key => $value];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $array1
+     * @param array $array2
+     *
+     * @return array
+     */
+    public static function arrayMergeKeys(array $array1, array $array2) : array
+    {
+        array_walk($array1, static function (&$value1, $key) use ($array2) {
+            if (array_key_exists($key, $array2)) {
+                $value2 = $array2[$key];
+                if (\is_array($value1)) {
+                    $value1 = array_merge($value1, (array)$value2);
+                    return;
+                }
+
+                $value1 = [$value1, $value2];
+            }
+        });
+
+        return $array1;
+    }
 }
