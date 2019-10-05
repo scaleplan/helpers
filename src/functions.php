@@ -11,8 +11,7 @@ use Scaleplan\Helpers\Exceptions\EnvNotFoundException;
  */
 function get_env(string $envName) : ?string
 {
-    $env = getenv($envName);
-    return $env === false ? null : $env;
+    return $_ENV[$envName] ?? null;
 }
 
 /**
