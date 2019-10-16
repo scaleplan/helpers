@@ -15,12 +15,12 @@ use Scaleplan\Helpers\Exceptions\YoutubeException;
  */
 class Helper
 {
-    public const YOUTUBE_INFO_URL = 'https://www.youtube.com/get_video_info?video_id=';
-    public const YOUTUBE_STATUS_FAIL = 'status=fail';
-    public const YOUTUBE_URL_ENCODED = 'url_encoded_fmt_stream_map';
-    public const YOUTUBE_TITLE = 'title';
-    public const YOUTUBE_IMG_NAME = 'default.jpg';
-    public const YOUTUBE_MAX_IMG_NAME = 'maxresdefault.jpg';
+    public const YOUTUBE_INFO_URL      = 'https://www.youtube.com/get_video_info?video_id=';
+    public const YOUTUBE_STATUS_FAIL   = 'status=fail';
+    public const YOUTUBE_URL_ENCODED   = 'url_encoded_fmt_stream_map';
+    public const YOUTUBE_TITLE         = 'title';
+    public const YOUTUBE_IMG_NAME      = 'default.jpg';
+    public const YOUTUBE_MAX_IMG_NAME  = 'maxresdefault.jpg';
     public const YOUTUBE_THUMBNAIL_URL = 'thumbnail_url';
 
     public const DEFAULT_CONFIGS_DIRECTORY_PATH = '/configs';
@@ -93,9 +93,9 @@ class Helper
      *
      * @return string
      */
-    public static function trimPhoneNumber(string $phoneNumber) : string
+    public static function trimPhoneNumber(string $phoneNumber) : ?string
     {
-        return $phoneNumber ? strtr($phoneNumber, [' ' => '', '(' => '', ')' => '', '-' => '']) : $phoneNumber;
+        return $phoneNumber !== '' ? strtr($phoneNumber, [' ' => '', '(' => '', ')' => '', '-' => '']) : null;
     }
 
     /**
