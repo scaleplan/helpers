@@ -119,7 +119,7 @@ class Helper
             return '';
         }
 
-        return idn_to_utf8(array_reverse($domains)[2], 0, INTL_IDNA_VARIANT_UTS46);
+        return idn_to_utf8($domains[0], 0, INTL_IDNA_VARIANT_UTS46);
     }
 
     /**

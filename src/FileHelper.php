@@ -173,13 +173,13 @@ class FileHelper
                 throw new FileSaveException('Неподдерживаемое расширение', 415);
             }
 
-            if (!($validExt = static::validateFileMimeType($tn))) {
-                throw new FileSaveException('Неподдерживаемый тип файла', 415);
-            }
-
-//        if ($validExt !== $ext) {
-//            $ext = $validExt;
-//        }
+//            if (!($validExt = static::validateFileMimeType($tn))) {
+//                throw new FileSaveException('Неподдерживаемый тип файла', 415);
+//            }
+//
+//            if ($validExt !== $ext) {
+//                $ext = $validExt;
+//            }
 
             $newName = "$newName.$ext";
             $path = "$uploadPath/$newName";
@@ -192,12 +192,12 @@ class FileHelper
         }
 
         $path = getenv('FILES_URL_PREFIX') . strtr(
-            $path,
-            [
-                get_required_env('BUNDLE_PATH') => '',
-                get_required_env('FILES_DIRECTORY_PATH') => '',
-            ]
-        );
+                $path,
+                [
+                    get_required_env('BUNDLE_PATH')          => '',
+                    get_required_env('FILES_DIRECTORY_PATH') => '',
+                ]
+            );
         return ['name' => $fn, 'path' => $path];
     }
 
