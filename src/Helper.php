@@ -206,7 +206,7 @@ class Helper
      *
      * @return string
      */
-    public static function buildUrl(string $url, array $params) : string
+    public static function buildUrl(string $url, array $params = []) : string
     {
         if ($params) {
             $url = "$url?" . http_build_query($params);
