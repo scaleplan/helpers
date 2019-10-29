@@ -104,6 +104,8 @@ class Helper
      * @param string|null $url - URL для выделения поддомена
      *
      * @return string
+     * 
+     * @throws Exceptions\EnvNotFoundException
      */
     public static function getSubdomain(string $url = null) : string
     {
@@ -113,9 +115,9 @@ class Helper
 
         $url = parse_url($url, PHP_URL_HOST) ?? $url;
         /** @var string $url */
-        $url = \str_replace('www.', '', $url);
+        $url = \strtr($url, ['www.' => '', get_required_env(static::DOMAIN_ENV_LABEL) => '',]);
         $domains = explode('.', $url);
-        if (\count($domains) < 3) {
+        if (!$domains[0]) {
             return '';
         }
 
