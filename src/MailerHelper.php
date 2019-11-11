@@ -8,8 +8,6 @@ use PHPMailer\PHPMailer\PHPMailer;
  * Хэлпер отправки писем
  *
  * Class MailerHelper
- *
- * @package App\Classes
  */
 class MailerHelper
 {

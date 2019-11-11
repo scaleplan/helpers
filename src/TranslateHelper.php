@@ -1,15 +1,11 @@
 <?php
 
-namespace App\Classes;
-
-use function Scaleplan\Helpers\get_env;
+namespace Scaleplan\Helpers;
 
 /**
  * Хэлпер для перевода текста посредством Yandex.Переводчика
  *
  * Class TranslateHelper
- *
- * @package App\Classes
  */
 class TranslateHelper
 {
