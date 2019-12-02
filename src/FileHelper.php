@@ -294,13 +294,23 @@ class FileHelper
     public static function getFilePath(string $fileKind) : string
     {
         $locations = Helper::getConf(get_required_env('FILE_LOCATIONS_CONFIG_NAME'));
-        if (!\is_array($locations) || empty($locations[$fileKind])) {
+        $location = null;
+        if (!\is_array($locations) || empty($location = $locations[$fileKind] ?? null)) {
+            foreach (array_keys($locations) as $field) {
+                if (@preg_match($field, $fileKind)) {
+                    $location = $locations[$field];
+                    break;
+                }
+            }
+        }
+
+        if (!$location) {
             throw new FileUploadException("Для поля $fileKind не задан путь сохранения");
         }
 
         return get_required_env('BUNDLE_PATH')
             . get_required_env('FILES_DIRECTORY_PATH')
-            . $locations[$fileKind];
+            . $location;
     }
 
     /**
