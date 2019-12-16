@@ -25,7 +25,7 @@ function get_required_env(string $envName) : string
 {
     $env = getenv($envName);
     if ($env === false) {
-        throw new EnvNotFoundException();
+        throw new EnvNotFoundException($envName);
     }
 
     return $env;
