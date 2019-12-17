@@ -104,7 +104,7 @@ class Helper
      * @param string|null $url - URL для выделения поддомена
      *
      * @return string
-     * 
+     *
      * @throws Exceptions\EnvNotFoundException
      */
     public static function getSubdomain(string $url = null) : string
