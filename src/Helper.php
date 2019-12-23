@@ -229,7 +229,7 @@ class Helper
      *
      * @throws \Exception
      */
-    public function getRandomString($length = 10) : string
+    public static function getRandomString($length = 10) : string
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
