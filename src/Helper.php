@@ -116,12 +116,11 @@ class Helper
         $url = parse_url($url, PHP_URL_HOST) ?? $url;
         /** @var string $url */
         $url = \strtr($url, ['www.' => '', get_required_env(static::DOMAIN_ENV_LABEL) => '',]);
-        $domains = explode('.', $url);
-        if (!$domains[0]) {
+        if (!$url) {
             return '';
         }
 
-        return idn_to_utf8($domains[0], 0, INTL_IDNA_VARIANT_UTS46);
+        return idn_to_utf8(trim($url, '.'), 0, INTL_IDNA_VARIANT_UTS46);
     }
 
     /**
