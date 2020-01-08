@@ -317,10 +317,11 @@ class FileHelper
      * Найти все файлы в каталоге, включая вложенные директории
      *
      * @param string $dirPath - путь к каталогу
+     * @param array|null $extensions - фильтр по расширению файла
      *
      * @return array
      */
-    public static function getRecursivePaths(string $dirPath) : array
+    public static function getRecursivePaths(string $dirPath, array $extensions = null) : array
     {
         if (!\is_dir($dirPath)) {
             return [];
@@ -341,6 +342,10 @@ class FileHelper
             $result += array_map(static function ($item) use ($path) {
                 return "$path/$item";
             }, static::getRecursivePaths($path));
+        }
+
+        if (null !== $extensions) {
+            $result = preg_grep('~\.(' . implode('|', $extensions) . ')$~', $result);
         }
 
         return $result;
