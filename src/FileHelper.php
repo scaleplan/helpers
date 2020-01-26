@@ -25,7 +25,7 @@ class FileHelper
 
     public const FILES_DIRECTORY_PATH = '/files';
 
-    public const DIRECTORY_MODE = 0777;
+    public const DIRECTORY_MODE = 0775;
 
     /**
      * Сохранить массив в csv-файл
@@ -219,7 +219,10 @@ class FileHelper
         $result = [];
         foreach ($files as $field => &$file) {
             $uploadPath = static::getFilePath($field);
-            if (!\is_dir($uploadPath) && !mkdir($uploadPath, static::DIRECTORY_MODE, true) && !\is_dir($uploadPath)) {
+            if (!is_dir($uploadPath)
+                && !mkdir($uploadPath, static::DIRECTORY_MODE, true)
+                && chmod($uploadPath, static::DIRECTORY_MODE)
+            ) {
                 throw new FileSaveException('Не удалось создать директорию сохранения', 500);
             }
 
