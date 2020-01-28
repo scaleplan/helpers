@@ -170,7 +170,7 @@ class FileHelper
             }
 
             if (!static::validateFileExt($ext)) {
-                throw new FileSaveException('Неподдерживаемое расширение', 415);
+                throw new FileSaveException("Неподдерживаемое расширение '$ext'", 415);
             }
 
 //            if (!($validExt = static::validateFileMimeType($tn))) {
