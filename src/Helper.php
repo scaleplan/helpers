@@ -206,16 +206,23 @@ class Helper
      * @param array $params
      * @param bool $addHost
      *
+     * @param string $subdomain
+     *
      * @return string
      */
-    public static function buildUrl(string $url, array $params = [], bool $addHost = false) : string
+    public static function buildUrl(
+        string $url,
+        array $params = [],
+        bool $addHost = false,
+        string $subdomain = ''
+    ) : string
     {
         if ($params) {
             $url = "$url?" . http_build_query($params);
         }
 
-        if ($addHost && isset($_SERVER['HTTP_HOST'])) {
-            $url = $_SERVER['HTTP_HOST'] . $url;
+        if (($addHost || $subdomain) && isset($_SERVER['HTTP_HOST'])) {
+            $url = ($subdomain ? "$subdomain." : '') . $_SERVER['HTTP_HOST'] . $url;
         }
 
         return $url;
