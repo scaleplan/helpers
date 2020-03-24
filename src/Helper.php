@@ -225,7 +225,7 @@ class Helper
             $url = ($subdomain ? "$subdomain." : '') . $_SERVER['HTTP_HOST'] . $url;
         }
 
-        return $url;
+        return (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . "://$url";
     }
 
     /**
