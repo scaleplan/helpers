@@ -223,9 +223,10 @@ class Helper
 
         if (($addHost || $subdomain) && isset($_SERVER['HTTP_HOST'])) {
             $url = ($subdomain ? "$subdomain." : '') . $_SERVER['HTTP_HOST'] . $url;
+            $url = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . "://$url";
         }
 
-        return (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . "://$url";
+        return $url;
     }
 
     /**
