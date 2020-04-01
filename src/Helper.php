@@ -5,6 +5,9 @@ namespace Scaleplan\Helpers;
 use Scaleplan\Db\Db;
 use Scaleplan\Helpers\Exceptions\HelperException;
 use Scaleplan\Helpers\Exceptions\YoutubeException;
+use Scaleplan\Main\App;
+use function Scaleplan\DependencyInjection\get_required_container;
+use function Scaleplan\DependencyInjection\get_required_static_container;
 
 /**
  * Полезные методы
@@ -209,6 +212,13 @@ class Helper
      * @param string $subdomain
      *
      * @return string
+     * @throws Exceptions\EnvNotFoundException
+     * @throws HelperException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public static function buildUrl(
         string $url,
@@ -217,16 +227,24 @@ class Helper
         string $subdomain = ''
     ) : string
     {
+        $url = get_required_env('DOMAIN') . $url;
         if ($params) {
             $url = "$url?" . http_build_query($params);
         }
 
-        if (($addHost || $subdomain) && isset($_SERVER['HTTP_HOST'])) {
-            $url = ($subdomain ? "$subdomain." : '') . $_SERVER['HTTP_HOST'] . $url;
-            $url = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . "://$url";
+        if (($addHost || $subdomain)) {
+            if (!$subdomain) {
+                /** @var App $app */
+                $app = get_required_static_container(App::class);
+                $subdomain = $app::getSubdomain();
+            }
+
+            $url = "$subdomain.$url";
         }
 
-        return $url;
+        $scheme = !empty($_SERVER['HTTPS']) ? 'https' : 'http';
+
+        return "$scheme://$url";
     }
 
     /**
