@@ -207,11 +207,11 @@ class Helper
     /**
      * @param string $url
      * @param array $params
-     * @param bool $addHost
-     *
+     * @param bool $addSubdomain
      * @param string $subdomain
      *
      * @return string
+     *
      * @throws Exceptions\EnvNotFoundException
      * @throws HelperException
      * @throws \ReflectionException
@@ -223,7 +223,7 @@ class Helper
     public static function buildUrl(
         string $url,
         array $params = [],
-        bool $addHost = false,
+        bool $addSubdomain = false,
         string $subdomain = ''
     ) : string
     {
@@ -232,7 +232,7 @@ class Helper
             $url = "$url?" . http_build_query($params);
         }
 
-        if (($addHost || $subdomain)) {
+        if (($addSubdomain || $subdomain)) {
             if (!$subdomain) {
                 /** @var App $app */
                 $app = get_required_static_container(App::class);
