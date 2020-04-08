@@ -239,7 +239,9 @@ class Helper
                 $subdomain = $app::getSubdomain();
             }
 
-            $url = "$subdomain.$url";
+            if ($subdomain) {
+                $url = "$subdomain.$url";
+            }
         }
 
         $scheme = !empty($_SERVER['HTTPS']) ? 'https' : 'http';
