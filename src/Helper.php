@@ -6,7 +6,6 @@ use Scaleplan\Db\Db;
 use Scaleplan\Helpers\Exceptions\HelperException;
 use Scaleplan\Helpers\Exceptions\YoutubeException;
 use Scaleplan\Main\App;
-use function Scaleplan\DependencyInjection\get_required_container;
 use function Scaleplan\DependencyInjection\get_required_static_container;
 
 /**
