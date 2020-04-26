@@ -231,7 +231,7 @@ class Helper
             $url = "$url?" . http_build_query($params);
         }
 
-        if (($addSubdomain || $subdomain)) {
+        if ($addSubdomain) {
             if (!$subdomain) {
                 /** @var App $app */
                 $app = get_required_static_container(App::class);
