@@ -196,7 +196,7 @@ class Helper
     public static function hostCheck(string $host = null) : bool
     {
         if (!$host) {
-            $host = (string)$_SERVER['HTTP_HOST'];
+            $host = $_SERVER['HTTP_HOST'] ?? '';
         }
 
         return getenv(static::DOMAIN_ENV_LABEL) !== false

@@ -163,7 +163,7 @@ class FileHelper
                 throw new FileSaveException('Не удалось записать файл на диск', 500);
             }
 
-            if (filesize($tn) > (1048576 * $fileMaxSizeMb)) {
+            if (@filesize($tn) > (1048576 * $fileMaxSizeMb)) {
                 throw new FileSaveException(
                     "Размер загружаемого файла не может быть больше значения $fileMaxSizeMb мегабайт).", 413
                 );
@@ -187,7 +187,7 @@ class FileHelper
                 throw new FileSaveException("Файл $fn не был корректно сохранен", 500);
             }
         } catch (\Throwable $e) {
-            unlink($tn);
+            @unlink($tn);
             throw $e;
         }
 
