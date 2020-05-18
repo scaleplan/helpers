@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Scaleplan\Helpers\Exceptions;
 
 /**
- * Class FileSaveException
+ * Class FileException
  *
  * @package Scaleplan\Helpers\Exceptions
  */
-class FileSaveException extends FileException
+class FileException extends HelperException
 {
-    public const MESSAGE = 'Save file error.';
+    public const MESSAGE = 'File error.';
     public const CODE = 500;
 }

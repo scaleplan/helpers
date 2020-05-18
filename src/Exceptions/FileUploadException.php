@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Scaleplan\Helpers\Exceptions;
 
@@ -7,7 +8,7 @@ namespace Scaleplan\Helpers\Exceptions;
  *
  * @package Scaleplan\Helpers\Exceptions
  */
-class FileUploadException extends HelperException
+class FileUploadException extends FileException
 {
     public const MESSAGE = 'File upload error.';
     public const CODE = 500;

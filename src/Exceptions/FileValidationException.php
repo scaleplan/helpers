@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Scaleplan\Helpers\Exceptions;
 
@@ -7,7 +8,7 @@ namespace Scaleplan\Helpers\Exceptions;
  *
  * @package Scaleplan\Helpers\Exceptions
  */
-class FileValidationException extends HelperException
+class FileValidationException extends FileException
 {
     public const MESSAGE = 'File validation error.';
     public const CODE = 422;
