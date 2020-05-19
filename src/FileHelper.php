@@ -296,7 +296,7 @@ class FileHelper
      */
     public static function getFilePath(string $fileKind) : string
     {
-        $locations = Helper::getConf(get_required_env('FILE_LOCATIONS_CONFIG_NAME'));
+        $locations = Helper::getConf(get_required_env('FILE_LOCATIONS_CONFIG_NAME'), false);
         $location = null;
         if (!\is_array($locations) || empty($location = $locations[$fileKind] ?? null)) {
             foreach (array_keys($locations) as $field) {

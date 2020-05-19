@@ -35,21 +35,26 @@ class Helper
      * Корректный доступ к конфигу
      *
      * @param string $name - название конфига
+     * @param bool $useSession
      *
      * @return array
      *
+     * @throws Exceptions\EnvNotFoundException
      * @throws HelperException
      */
-    public static function getConf(string $name) : array
+    public static function getConf(string $name, bool $useSession = true) : array
     {
         $configPath = get_env('DEFAULT_CONFIGS_DIRECTORY_PATH') ?? static::DEFAULT_CONFIGS_DIRECTORY_PATH;
+        $filePath = get_required_env('BUNDLE_PATH') . "/$configPath/$name.php";
+        if (!file_exists($filePath)) {
+            throw new HelperException("Файл $filePath не существует");
+        }
+
+        if (!$useSession) {
+            return include $filePath;
+        }
 
         if (empty($_SESSION[$name])) {
-            $filePath = get_required_env('BUNDLE_PATH') . "/$configPath/$name.php";
-            if (!file_exists($filePath)) {
-                throw new HelperException("Файл $filePath не существует");
-            }
-
             $_SESSION[$name] = include $filePath;
         }
 
