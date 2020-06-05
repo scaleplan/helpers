@@ -158,20 +158,23 @@ class FileHelper
 
         $fileMaxSizeMb = (int)(get_env('FILE_UPLOAD_MAX_SIZE') ?? static::FILE_UPLOAD_MAX_SIZE);
 
-        try {
-            if (!is_uploaded_file($tn)) {
-                throw new FileSaveException("Не удалось записать файл $fn на диск", 500);
-            }
+        if (!file_exists($tn)) {
+            throw new FileSaveException("Временный файл $tn не найден.");
+        }
 
-            if (@filesize($tn) > (1048576 * $fileMaxSizeMb)) {
-                throw new FileSaveException(
-                    "Размер загружаемого файла не может быть больше значения $fileMaxSizeMb мегабайт).", 413
-                );
-            }
+        if (!is_uploaded_file($tn)) {
+            throw new FileSaveException("Не удалось записать файл $fn на диск", 500);
+        }
 
-            if (!static::validateFileExt($ext)) {
-                throw new FileSaveException("Неподдерживаемое расширение '$ext'", 415);
-            }
+        if (@filesize($tn) > (1048576 * $fileMaxSizeMb)) {
+            throw new FileSaveException(
+                "Размер загружаемого файла не может быть больше значения $fileMaxSizeMb мегабайт).", 413
+            );
+        }
+
+        if (!static::validateFileExt($ext)) {
+            throw new FileSaveException("Неподдерживаемое расширение '$ext'", 415);
+        }
 
 //            if (!($validExt = static::validateFileMimeType($tn))) {
 //                throw new FileSaveException('Неподдерживаемый тип файла', 415);
@@ -181,14 +184,10 @@ class FileHelper
 //                $ext = $validExt;
 //            }
 
-            $newName = "$newName.$ext";
-            $path = "$uploadPath/$newName";
-            if (!move_uploaded_file($tn, $path)) {
-                throw new FileSaveException("Файл $fn не был корректно сохранен", 500);
-            }
-        } catch (\Throwable $e) {
-            @unlink($tn);
-            throw $e;
+        $newName = "$newName.$ext";
+        $path = "$uploadPath/$newName";
+        if (!copy($tn, $path)) {
+            throw new FileSaveException("Файл $fn не был корректно сохранен", 500);
         }
 
         $path = getenv('FILES_URL_PREFIX') . strtr(
