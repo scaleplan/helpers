@@ -117,7 +117,7 @@ class Helper
     public static function getSubdomain(string $url = null) : string
     {
         if (!$url) {
-            $url = (string)($_SERVER['HTTP_HOST'] ?? '');
+            $url = ($_SERVER['HTTP_HOST'] ?? '');
         }
 
         $url = parse_url($url, PHP_URL_HOST) ?? $url;

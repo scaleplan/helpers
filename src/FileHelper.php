@@ -138,7 +138,7 @@ class FileHelper
                 throw new FileSaveException('Отсутствует временная папка', 500);
 
             case UPLOAD_ERR_CANT_WRITE:
-                throw new FileSaveException('Не удалось записать файл на диск', 500);
+                throw new FileSaveException("Не удалось записать файл $fn на диск", 500);
 
             case UPLOAD_ERR_EXTENSION:
                 throw new FileSaveException('PHP-расширение остановило загрузку файла', 500);
@@ -159,9 +159,9 @@ class FileHelper
         $fileMaxSizeMb = (int)(get_env('FILE_UPLOAD_MAX_SIZE') ?? static::FILE_UPLOAD_MAX_SIZE);
 
         try {
-            if (!is_uploaded_file($tn)) {
-                throw new FileSaveException('Не удалось записать файл на диск', 500);
-            }
+//            if (!is_uploaded_file($tn)) {
+//                throw new FileSaveException("Не удалось записать файл $fn на диск", 500);
+//            }
 
             if (@filesize($tn) > (1048576 * $fileMaxSizeMb)) {
                 throw new FileSaveException(
@@ -183,11 +183,15 @@ class FileHelper
 
             $newName = "$newName.$ext";
             $path = "$uploadPath/$newName";
-            if (!move_uploaded_file($tn, $path)) {
+            if (!rename($tn, $path)) {
                 throw new FileSaveException("Файл $fn не был корректно сохранен", 500);
             }
         } catch (\Throwable $e) {
-            @unlink($tn);
+            print_r($file);
+            if (!file_exists($tn)) {
+                echo 'Пиздец';
+            }
+//            @unlink($tn);
             throw $e;
         }
 
