@@ -159,9 +159,9 @@ class FileHelper
         $fileMaxSizeMb = (int)(get_env('FILE_UPLOAD_MAX_SIZE') ?? static::FILE_UPLOAD_MAX_SIZE);
 
         try {
-//            if (!is_uploaded_file($tn)) {
-//                throw new FileSaveException("Не удалось записать файл $fn на диск", 500);
-//            }
+            if (!is_uploaded_file($tn)) {
+                throw new FileSaveException("Не удалось записать файл $fn на диск", 500);
+            }
 
             if (@filesize($tn) > (1048576 * $fileMaxSizeMb)) {
                 throw new FileSaveException(
@@ -183,15 +183,11 @@ class FileHelper
 
             $newName = "$newName.$ext";
             $path = "$uploadPath/$newName";
-            if (!rename($tn, $path)) {
+            if (!move_uploaded_file($tn, $path)) {
                 throw new FileSaveException("Файл $fn не был корректно сохранен", 500);
             }
         } catch (\Throwable $e) {
-            print_r($file);
-            if (!file_exists($tn)) {
-                echo 'Пиздец';
-            }
-//            @unlink($tn);
+            @unlink($tn);
             throw $e;
         }
 
