@@ -9,7 +9,7 @@ namespace Scaleplan\Helpers\Exceptions;
  */
 class HelperException extends \Exception
 {
-    public const MESSAGE = 'Helper error.';
+    public const MESSAGE = 'Ошибка хэлпера.';
     public const CODE = 500;
 
     /**

@@ -9,7 +9,7 @@ namespace Scaleplan\Helpers\Exceptions;
  */
 class EnvNotFoundException extends HelperException
 {
-    public const MESSAGE = 'Environment variable :envName not found.';
+    public const MESSAGE = 'Переменная окружения :envName не найдена.';
     public const CODE = 404;
 
     /**

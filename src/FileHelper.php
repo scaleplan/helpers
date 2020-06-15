@@ -129,19 +129,19 @@ class FileHelper
 
             case UPLOAD_ERR_FORM_SIZE:
                 throw new FileSaveException('Размер загружаемого файла превысил значение MAX_FILE_SIZE, '
-                    . 'указанное в HTML-форме', 413);
+                    . 'указанное в HTML-форме.', 413);
 
             case UPLOAD_ERR_PARTIAL:
-                throw new FileSaveException('Загружаемый файл был получен только частично', 400);
+                throw new FileSaveException('Загружаемый файл был получен только частично.', 400);
 
             case UPLOAD_ERR_NO_TMP_DIR:
-                throw new FileSaveException('Отсутствует временная папка', 500);
+                throw new FileSaveException('Отсутствует временная папка.', 500);
 
             case UPLOAD_ERR_CANT_WRITE:
-                throw new FileSaveException("Не удалось записать файл $fn на диск", 500);
+                throw new FileSaveException("Не удалось записать файл $fn на диск.", 500);
 
             case UPLOAD_ERR_EXTENSION:
-                throw new FileSaveException('PHP-расширение остановило загрузку файла', 500);
+                throw new FileSaveException('PHP-расширение остановило загрузку файла.', 500);
         }
 
         $nameArray = explode('.', $fn);
@@ -163,17 +163,17 @@ class FileHelper
         }
 
         if (!is_uploaded_file($tn)) {
-            throw new FileSaveException("Не удалось записать файл $fn на диск", 500);
+            throw new FileSaveException("Не удалось записать файл $fn на диск.", 500);
         }
 
         if (@filesize($tn) > (1048576 * $fileMaxSizeMb)) {
             throw new FileSaveException(
-                "Размер загружаемого файла не может быть больше значения $fileMaxSizeMb мегабайт).", 413
+                "Размер загружаемого файла не может быть больше значения $fileMaxSizeMb мегабайт.", 413
             );
         }
 
         if (!static::validateFileExt($ext)) {
-            throw new FileSaveException("Неподдерживаемое расширение '$ext'", 415);
+            throw new FileSaveException("Неподдерживаемое расширение '$ext'.", 415);
         }
 
 //            if (!($validExt = static::validateFileMimeType($tn))) {
@@ -187,7 +187,7 @@ class FileHelper
         $newName = "$newName.$ext";
         $path = "$uploadPath/$newName";
         if (!copy($tn, $path)) {
-            throw new FileSaveException("Файл $fn не был корректно сохранен", 500);
+            throw new FileSaveException("Файл $fn не был корректно сохранен.", 500);
         }
 
         $path = getenv('FILES_URL_PREFIX') . strtr(
@@ -222,7 +222,7 @@ class FileHelper
                 && !mkdir($uploadPath, static::DIRECTORY_MODE, true)
                 && chmod($uploadPath, static::DIRECTORY_MODE)
             ) {
-                throw new FileSaveException('Не удалось создать директорию сохранения', 500);
+                throw new FileSaveException('Не удалось создать директорию сохранения.', 500);
             }
 
             if (\is_array($file['name'])) {
@@ -273,7 +273,7 @@ class FileHelper
     public static function validateFileMimeType(string &$filePath) : ?string
     {
         if (!file_exists($filePath)) {
-            throw new FileValidationException("Файл $filePath не существует");
+            throw new FileValidationException("Файл $filePath не существует.");
         }
 
         if (empty($validExt = Helper::getConf(get_required_env('MIMES_CONFIG_NAME'))[mime_content_type($filePath)])) {
@@ -307,7 +307,7 @@ class FileHelper
         }
 
         if (!$location) {
-            throw new FileUploadException("Для поля $fileKind не задан путь сохранения");
+            throw new FileUploadException("Для поля $fileKind не задан путь сохранения.");
         }
 
         return get_required_env('BUNDLE_PATH')

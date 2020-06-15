@@ -47,7 +47,7 @@ class Helper
         $configPath = get_env('DEFAULT_CONFIGS_DIRECTORY_PATH') ?? static::DEFAULT_CONFIGS_DIRECTORY_PATH;
         $filePath = get_required_env('BUNDLE_PATH') . "/$configPath/$name.php";
         if (!file_exists($filePath)) {
-            throw new HelperException("Файл $filePath не существует");
+            throw new HelperException("Файл $filePath не существует.");
         }
 
         if (!$useSession) {
@@ -155,7 +155,7 @@ class Helper
     {
         $info = file_get_contents(static::YOUTUBE_INFO_URL . $videoId);
         if (!$info || stripos($info, static::YOUTUBE_STATUS_FAIL) !== false) {
-            throw new YoutubeException('Не удалось получить информацию о видеоролике');
+            throw new YoutubeException('Не удалось получить информацию о видеоролике.');
         }
 
         $info = explode('&', $info);

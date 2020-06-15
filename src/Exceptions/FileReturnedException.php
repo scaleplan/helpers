@@ -10,6 +10,6 @@ namespace Scaleplan\Helpers\Exceptions;
  */
 class FileReturnedException extends FileException
 {
-    public const MESSAGE = 'File returned error.';
+    public const MESSAGE = 'Ошибка формирования файла.';
     public const CODE = 500;
 }

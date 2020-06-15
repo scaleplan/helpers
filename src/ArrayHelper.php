@@ -29,7 +29,7 @@ class ArrayHelper
             }
 
             if (!isset($value[$field])) {
-                throw new HelperException('Запись не имеет искомого индекса');
+                throw new HelperException('Запись не имеет искомого индекса.');
             }
 
             $array[$value[$field]] = $value;
