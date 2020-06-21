@@ -3,6 +3,7 @@
 namespace Scaleplan\Helpers;
 
 use Scaleplan\Helpers\Exceptions\HelperException;
+use function Scaleplan\Translator\translate;
 
 /**
  * Class ArrayHelper
@@ -29,7 +30,7 @@ class ArrayHelper
             }
 
             if (!isset($value[$field])) {
-                throw new HelperException('Запись не имеет искомого индекса.');
+                throw new HelperException(translate('form.record-index-not-found'));
             }
 
             $array[$value[$field]] = $value;

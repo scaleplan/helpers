@@ -1,0 +1,22 @@
+php-config-file-size-exceeded: php.ini upload_max_filesize directive must be greater or equals than uploaded file size.
+form-file-size-exceeded: Form MAX_FILE_SIZE setting must be greater or equals than than uploaded file size.
+file-corrupted: Uploaded file received partly.
+tmp-not-found: Temp directory not found.
+file-write-failed: Error of file :fn writing on disc.
+php-stop-file-upload: PHP stopped file uploading.
+tmp-file-not-found: Temp file :tn not found.
+config-file-size-exceeded: Uploaded file size must be less or equal than :file-max-size-mb Mb.
+file-extension-not-supported: File extension ':ext' not supported.
+file-saving-failed: File :fn saving failed.
+destination-dir-creating-error: Destination directory creating error.
+file-not-exist: File :file-path not exist.
+file-destination-path-not-set: For field :file-kind saving path not found.
+video-info-receiving-error: Video info receiving error.
+unknown-http-code: Unknown HTTP-code :code
+env-not-found: Environment variable :envName not found.
+file-error: File error.
+file-creating-error: File creating error.
+file-saving-error: File saving error.
+file-upload-error: File uploading error.
+file-validation-error: File validation error.
+helper-error: Helper error.

@@ -121,21 +121,16 @@ class FileHelper
                 return null;
 
             case UPLOAD_ERR_INI_SIZE:
-                throw new FileSaveException(
-                    'Размер принятого файла превысил максимально допустимый '
-                    . 'размер, который задан директивой upload_max_filesize конфигурационного файла php.ini',
-                    413
-                );
+                throw new FileSaveException('helpers.php-config-file-size-exceeded', 413);
 
             case UPLOAD_ERR_FORM_SIZE:
-                throw new FileSaveException('Размер загружаемого файла превысил значение MAX_FILE_SIZE, '
-                    . 'указанное в HTML-форме.', 413);
+                throw new FileSaveException('helpers.form-file-size-exceeded', 413);
 
             case UPLOAD_ERR_PARTIAL:
-                throw new FileSaveException('Загружаемый файл был получен только частично.', 400);
+                throw new FileSaveException('helpers.file-corrupted', 400);
 
             case UPLOAD_ERR_NO_TMP_DIR:
-                throw new FileSaveException('Отсутствует временная папка.', 500);
+                throw new FileSaveException('helpers.tmp-not-found', 500);
 
             case UPLOAD_ERR_CANT_WRITE:
                 throw new FileSaveException("Не удалось записать файл $fn на диск.", 500);

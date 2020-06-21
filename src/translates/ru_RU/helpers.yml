@@ -1,0 +1,22 @@
+php-config-file-size-exceeded: Размер принятого файла превысил максимально допустимый размер, который задан директивой upload_max_filesize конфигурационного файла php.ini.
+form-file-size-exceeded: Размер загружаемого файла превысил значение MAX_FILE_SIZE указанное в HTML-форме.
+file-corrupted: Загружаемый файл был получен только частично.
+tmp-not-found: Отсутствует временная папка.
+file-write-failed: Не удалось записать файл :fn на диск.
+php-stop-file-upload: PHP-расширение остановило загрузку файла.
+tmp-file-not-found: Временный файл :tn не найден.
+config-file-size-exceeded: Размер загружаемого файла не может быть больше значения :file-max-size-mb мегабайт.
+file-extension-not-supported: Неподдерживаемое расширение ':ext'.
+file-saving-failed: Файл :fn не был корректно сохранен.
+destination-dir-creating-error: Не удалось создать директорию сохранения.
+file-not-exist: Файл :file-path не существует.
+file-destination-path-not-set: Для поля :file-kind не задан путь сохранения.
+video-info-receiving-error: Не удалось получить информацию о видеоролике.
+unknown-http-code: Неизвестный HTTP-код :code
+env-not-found: Переменная окружения :envName не найдена.
+file-error: Ошибка файла.
+file-creating-error: Ошибка формирования файла.
+file-saving-error: Ошибка сохранения файла.
+file-upload-error: Ошибка загрузки файла.
+file-validation-error: Ошибка валидации файла.
+helper-error: Ошибка хэлпера.
