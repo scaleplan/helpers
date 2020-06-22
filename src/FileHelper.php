@@ -6,6 +6,7 @@ use Scaleplan\Helpers\Exceptions\FileReturnedException;
 use Scaleplan\Helpers\Exceptions\FileSaveException;
 use Scaleplan\Helpers\Exceptions\FileUploadException;
 use Scaleplan\Helpers\Exceptions\FileValidationException;
+use function Scaleplan\Translator\translate;
 
 /**
  * Хэлпер манипуляций над файлами
@@ -121,22 +122,22 @@ class FileHelper
                 return null;
 
             case UPLOAD_ERR_INI_SIZE:
-                throw new FileSaveException('helpers.php-config-file-size-exceeded', 413);
+                throw new FileSaveException(translate('helpers.php-config-file-size-exceeded'), 413);
 
             case UPLOAD_ERR_FORM_SIZE:
-                throw new FileSaveException('helpers.form-file-size-exceeded', 413);
+                throw new FileSaveException(translate('helpers.form-file-size-exceeded'), 413);
 
             case UPLOAD_ERR_PARTIAL:
-                throw new FileSaveException('helpers.file-corrupted', 400);
+                throw new FileSaveException(translate('helpers.file-corrupted'), 400);
 
             case UPLOAD_ERR_NO_TMP_DIR:
-                throw new FileSaveException('helpers.tmp-not-found', 500);
+                throw new FileSaveException(translate('helpers.tmp-not-found'), 500);
 
             case UPLOAD_ERR_CANT_WRITE:
-                throw new FileSaveException("Не удалось записать файл $fn на диск.", 500);
+                throw new FileSaveException(translate('helpers.file-write-failed', ['fn' => $fn,]), 500);
 
             case UPLOAD_ERR_EXTENSION:
-                throw new FileSaveException('PHP-расширение остановило загрузку файла.', 500);
+                throw new FileSaveException(translate('helpers.php-stop-file-upload'), 500);
         }
 
         $nameArray = explode('.', $fn);
@@ -154,21 +155,22 @@ class FileHelper
         $fileMaxSizeMb = (int)(get_env('FILE_UPLOAD_MAX_SIZE') ?? static::FILE_UPLOAD_MAX_SIZE);
 
         if (!file_exists($tn)) {
-            throw new FileSaveException("Временный файл $tn не найден.");
+            throw new FileSaveException(translate('helpers.tmp-file-not-found', ['tn' => $tn,]));
         }
 
         if (!is_uploaded_file($tn)) {
-            throw new FileSaveException("Не удалось записать файл $fn на диск.", 500);
+            throw new FileSaveException(translate('helpers.file-write-failed', ['fn' => $fn,]), 500);
         }
 
         if (@filesize($tn) > (1048576 * $fileMaxSizeMb)) {
             throw new FileSaveException(
-                "Размер загружаемого файла не может быть больше значения $fileMaxSizeMb мегабайт.", 413
+                translate('helpers.config-file-size-exceeded', ['file-max-size-mb' => $fileMaxSizeMb,]),
+                413
             );
         }
 
         if (!static::validateFileExt($ext)) {
-            throw new FileSaveException("Неподдерживаемое расширение '$ext'.", 415);
+            throw new FileSaveException(translate('helpers.file-extension-not-supported', ['ext' => $ext,]), 415);
         }
 
 //            if (!($validExt = static::validateFileMimeType($tn))) {
@@ -182,7 +184,7 @@ class FileHelper
         $newName = "$newName.$ext";
         $path = "$uploadPath/$newName";
         if (!copy($tn, $path)) {
-            throw new FileSaveException("Файл $fn не был корректно сохранен.", 500);
+            throw new FileSaveException(translate('helpers.file-saving-failed', ['fn' => $fn,]), 500);
         }
 
         $path = getenv('FILES_URL_PREFIX') . strtr(
@@ -217,7 +219,7 @@ class FileHelper
                 && !mkdir($uploadPath, static::DIRECTORY_MODE, true)
                 && chmod($uploadPath, static::DIRECTORY_MODE)
             ) {
-                throw new FileSaveException('Не удалось создать директорию сохранения.', 500);
+                throw new FileSaveException(translate('helpers.destination-dir-creating-error'), 500);
             }
 
             if (\is_array($file['name'])) {
@@ -260,15 +262,21 @@ class FileHelper
      *
      * @param string $filePath - путь к файлу
      *
-     * @return null|string
+     * @return string|null
      *
+     * @throws Exceptions\EnvNotFoundException
      * @throws Exceptions\HelperException
      * @throws FileValidationException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public static function validateFileMimeType(string &$filePath) : ?string
     {
         if (!file_exists($filePath)) {
-            throw new FileValidationException("Файл $filePath не существует.");
+            throw new FileValidationException(translate('helpers.file-not-exist', ['file-path' => $filePath,]));
         }
 
         if (empty($validExt = Helper::getConf(get_required_env('MIMES_CONFIG_NAME'))[mime_content_type($filePath)])) {
@@ -285,8 +293,14 @@ class FileHelper
      *
      * @return string
      *
+     * @throws Exceptions\EnvNotFoundException
      * @throws Exceptions\HelperException
      * @throws FileUploadException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public static function getFilePath(string $fileKind) : string
     {
@@ -302,7 +316,9 @@ class FileHelper
         }
 
         if (!$location) {
-            throw new FileUploadException("Для поля $fileKind не задан путь сохранения.");
+            throw new FileUploadException(
+                translate('helpers.file-destination-path-not-set', ['file-kind' => $fileKind,])
+            );
         }
 
         return get_required_env('BUNDLE_PATH')

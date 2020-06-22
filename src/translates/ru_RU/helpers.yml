@@ -13,7 +13,7 @@ file-not-exist: Файл :file-path не существует.
 file-destination-path-not-set: Для поля :file-kind не задан путь сохранения.
 video-info-receiving-error: Не удалось получить информацию о видеоролике.
 unknown-http-code: Неизвестный HTTP-код :code
-env-not-found: Переменная окружения :envName не найдена.
+env-not-found: Переменная окружения :env-name не найдена.
 file-error: Ошибка файла.
 file-creating-error: Ошибка формирования файла.
 file-saving-error: Ошибка сохранения файла.

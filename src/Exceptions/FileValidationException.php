@@ -10,6 +10,6 @@ namespace Scaleplan\Helpers\Exceptions;
  */
 class FileValidationException extends FileException
 {
-    public const MESSAGE = 'Ошибка валидации файла.';
+    public const MESSAGE = 'helpers.file-validation-error';
     public const CODE = 422;
 }

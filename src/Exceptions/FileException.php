@@ -10,6 +10,6 @@ namespace Scaleplan\Helpers\Exceptions;
  */
 class FileException extends HelperException
 {
-    public const MESSAGE = 'Ошибка файла.';
+    public const MESSAGE = 'helpers.file-error';
     public const CODE = 500;
 }

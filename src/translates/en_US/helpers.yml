@@ -13,7 +13,7 @@ file-not-exist: File :file-path not exist.
 file-destination-path-not-set: For field :file-kind saving path not found.
 video-info-receiving-error: Video info receiving error.
 unknown-http-code: Unknown HTTP-code :code
-env-not-found: Environment variable :envName not found.
+env-not-found: Environment variable :env-name not found.
 file-error: File error.
 file-creating-error: File creating error.
 file-saving-error: File saving error.

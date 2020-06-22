@@ -7,6 +7,7 @@ use Scaleplan\Helpers\Exceptions\HelperException;
 use Scaleplan\Helpers\Exceptions\YoutubeException;
 use Scaleplan\Main\App;
 use function Scaleplan\DependencyInjection\get_required_static_container;
+use function Scaleplan\Translator\translate;
 
 /**
  * Полезные методы
@@ -41,13 +42,18 @@ class Helper
      *
      * @throws Exceptions\EnvNotFoundException
      * @throws HelperException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public static function getConf(string $name, bool $useSession = true) : array
     {
         $configPath = get_env('DEFAULT_CONFIGS_DIRECTORY_PATH') ?? static::DEFAULT_CONFIGS_DIRECTORY_PATH;
         $filePath = get_required_env('BUNDLE_PATH') . "/$configPath/$name.php";
         if (!file_exists($filePath)) {
-            throw new HelperException("Файл $filePath не существует.");
+            throw new HelperException(translate('helpers.file-not-exist', ['file-path' => $filePath,]));
         }
 
         if (!$useSession) {
@@ -149,13 +155,18 @@ class Helper
      *
      * @return array
      *
-     * @throws HelperException
+     * @throws YoutubeException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public static function getYoutubeInfo(string $videoId) : array
     {
         $info = file_get_contents(static::YOUTUBE_INFO_URL . $videoId);
         if (!$info || stripos($info, static::YOUTUBE_STATUS_FAIL) !== false) {
-            throw new YoutubeException('Не удалось получить информацию о видеоролике.');
+            throw new YoutubeException(translate('helpers.video-info-receiving-error'));
         }
 
         $info = explode('&', $info);
