@@ -78,9 +78,14 @@ class MailerHelper
      * @param array $files - прикрепляемые файлы
      *
      * @return bool
+     *
      * @throws Exceptions\EnvNotFoundException
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public static function mailSend(array $addresses, string $subject, string $message, string $mailLang = null, array $files = []): bool
     {

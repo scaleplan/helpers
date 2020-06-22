@@ -246,7 +246,13 @@ class FileHelper
      *
      * @return bool
      *
+     * @throws Exceptions\EnvNotFoundException
      * @throws Exceptions\HelperException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public static function validateFileExt(string &$extName) : bool
     {

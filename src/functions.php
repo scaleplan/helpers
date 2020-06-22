@@ -25,6 +25,11 @@ function get_env(string $envName) : ?string
  * @return string
  *
  * @throws EnvNotFoundException
+ * @throws \ReflectionException
+ * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+ * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+ * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+ * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
  */
 function get_required_env(string $envName) : string
 {
