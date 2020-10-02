@@ -287,4 +287,19 @@ class Helper
 
         return $randomString;
     }
+
+    /**
+     * @param \DateInterval $dateInterval
+     *
+     * @return int
+     *
+     * @throws \Exception
+     */
+    public static function dateIntervalToSeconds(\DateInterval $dateInterval) : int
+    {
+        $reference = new \DateTimeImmutable;
+        $endTime = $reference->add($dateInterval);
+
+        return $endTime->getTimestamp() - $reference->getTimestamp();
+    }
 }
